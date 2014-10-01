@@ -7,12 +7,12 @@ sudo apt-get install php5 php5-cli php5-fpm php5-gd  php5-imagick php5-imap php5
 ```
 
 ##源码包安装LNMP
-###安装nginx
-#####说明和注意事项：
-* --with-pcre=pcre源码包所在的路径
-* --with-zlib=zlib源码包在的路径
-* --\ linux代码换行符，不当做代码执行
-#####安装代码
+###NGINX 源码安装(测试环境ubuntu，需要root(sudo 命令)的权限执行一下代码 )
+####说明和注意事项：
+*  --with-pcre=pcre源码包所在的路径
+*  --with-zlib=zlib源码包在的路径
+*  --\ linux代码换行符，不当做代码执行
+####安装代码
 ```
 在nginx源码包目录下：
 ./configure \
@@ -23,12 +23,77 @@ sudo apt-get install php5 php5-cli php5-fpm php5-gd  php5-imagick php5-imap php5
     --with-pcre=../pcre-8.34 \
     --with-zlib=../zlib-1.2.8 \
 ```
+###编译php所需
+####libxml2
+```
+./configure --prefix=/usr/local/libxmll2/
+make
+make install
+```
+
+####libmcrypt
+```
+./configure --prefix=/usr/local/libmcrypt/
+make
+make install
+
+cd libltdl
+
+./configure --enable-ltdl-install
+make
+make install
+
+
+
+
+####libpng
+
+./configure --prefix=/usr/local/libpng/
+make
+make install
+
+
+####jpeg9
+
+./configure --prefix=/usr/local/jpeg9/ --enable-shared  --enable-static
+make
+make install
+
+
+
+####freetype
+
+./configure --prefix=/usr/local/freetype/
+make
+make install
+
+
+####autoconf
+
+./configure
+make
+make install
+
+
+####libgd2
+
+./configure \
+ --prefix=/usr/local/gd2/ \
+ --with-jpeg=/usr/local/jpeg9/ \
+ --with-freetype=/usr/local/freetype/ \
+ --with-png=/usr/local/libpng/
+make
+make install
+
+
+```
 ###源码安装PHP
 ```
 在php源码包目录下：
 ./configure \
-    --prefix=/usr/local/php  
-    --enable-fpm --with-mcrypt \
+    --prefix=/usr/local/php  \
+    --enable-fpm \
+    --with-mcrypt \
     --enable-mbstring \
     --disable-pdo \
     --with-curl \
@@ -40,7 +105,7 @@ sudo apt-get install php5 php5-cli php5-fpm php5-gd  php5-imagick php5-imap php5
     --enable-sockets \
     --enable-sysvsem \
     --enable-sysvshm \
-    -  -enable-pcntl \
+    - -enable-pcntl \
     --enable-mbregex \
     --with-mhash \
     --enable-zip \
