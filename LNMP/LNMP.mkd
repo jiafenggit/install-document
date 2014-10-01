@@ -23,7 +23,8 @@ sudo apt-get install php5 php5-cli php5-fpm php5-gd  php5-imagick php5-imap php5
     --with-pcre=../pcre-8.34 \
     --with-zlib=../zlib-1.2.8 \
 ```
-###编译php所需
+###编译php所需(安装目录都是在当前软件包目录下)
+apt-get install autoconf limXpm-dev
 ####libxml2
 ```
 ./configure --prefix=/usr/local/libxmll2/
@@ -42,10 +43,8 @@ cd libltdl
 ./configure --enable-ltdl-install
 make
 make install
-
-
-
-
+```
+```
 ####libpng
 
 ./configure --prefix=/usr/local/libpng/
@@ -90,27 +89,81 @@ make install
 ###源码安装PHP
 ```
 在php源码包目录下：
+
 ./configure \
-    --prefix=/usr/local/php  \
-    --enable-fpm \
-    --with-mcrypt \
-    --enable-mbstring \
-    --disable-pdo \
-    --with-curl \
-    --disable-debug \
-    --disable-rpath \
-    --enable-inline-optimization 
-    --with-bz2 \
-    --with-zlib \
-    --enable-sockets \
-    --enable-sysvsem \
-    --enable-sysvshm \
-    - -enable-pcntl \
-    --enable-mbregex \
-    --with-mhash \
-    --enable-zip \
-    --with-pcre-regex 
-    --with-gd \
-    --with-jpeg-dir\
+       --prefix=/usr/local/php  \
+       --with-mcrypt=/usr/local/libmcrypt  \
+       --with-libxml-dir=/usr/local/libxml2/ \
+       --with-jpeg-dir=/usr/local/jpeg9/ \
+       --with-png-dir=/usr/local/libpng/ \
+       --with-pcre-dir=/usr/local/pcre/ \
+       --with-freetype-dir=/usr/local/freetype/ \
+       --with-gd=/usr/local/gd2/ \
+       --with-xpm-dir=/usr/lib/x86_64-linux-gnu/ \
+       --with-openssl=/usr/local/openssl \
+       --enable-soap \
+       --enable-mbstring=all \
+       --enable-sockets \
+       --enable-pdo \
+       --enable-zip \
+       --enable-fpm \
+       --enable-xml \
+       --enable-bcmath \
+       --enable-shmop \
+       --enable-sysvsem \
+       --enable-pcntl \
+       --with-curl=/usr/local/curl/\
+       --with-zlib=/usr/local/zlib\
+       
+       
+           
+```
+
+###PHP添加扩展
+```
+usr/local/php/bin/phpize
+
+./configure \
+    --enable-redis \
+    --with-php-config=/usr/local/php/bin/php-config
+ 
+make
+make install
+```
+
+
+###修改配置
+```
+####nginx配置
+vi nginx.conf
+
+设置网站根目录
+ location / {
+            root   /home/www;
+            index  index.html index.php  index.htm;
+             }
+        
+  设置解析php       
+        # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
+   
+        location ~ \.php$ {
+           root          /home/www;
+           fastcgi_pass   127.0.0.1:9000;
+           fastcgi_index  index.php;
+           fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+           include        fastcgi_params;
+        }
 
 ```
+####php配置
+```
+php源码包中复制php.ini-development或者 php.ini-production  到 /php/etc/php.ini
+
+php安装目录下复制 cp php-fpm.conf.default  php-fpm.conf
+vi php-fpm.conf
+设置用户
+sudo useradd nginx
+user = nginx
+group = nginx
+```
+
