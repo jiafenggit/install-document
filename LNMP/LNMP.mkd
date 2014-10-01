@@ -167,3 +167,10 @@ user = nginx
 group = nginx
 ```
 
+解决php依赖
+php composer.phar 
+
+
+####配置加速器
+apc
+ --with-php-config=/usr/local/php/bin/php-config --enable-apcu
