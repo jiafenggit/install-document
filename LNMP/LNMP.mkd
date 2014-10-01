@@ -1,0 +1,51 @@
+#<center>LNMP</center>
+##ubuntu 软件源apt-get安装LNMP
+```
+sudo apt-get install nginx 
+sudo apt-get install php5 php5-cli php5-fpm php5-gd  php5-imagick php5-imap php5-json php5-mcrypt php5-memcache php5-mhash php5-ming php5-mysql php5-ps php5-pspell php5-recode php5-snmp php5-sqlite  php5-tidy php5-xcache php5-xmlrpc php5-xsl php-pear php-soap
+
+```
+
+##源码包安装LNMP
+###安装nginx
+#####说明和注意事项：
+* --with-pcre=pcre源码包所在的路径
+* --with-zlib=zlib源码包在的路径
+* --\ linux代码换行符，不当做代码执行
+#####安装代码
+```
+在nginx源码包目录下：
+./configure \
+    --sbin-path=/usr/local/nginx/nginx \
+    --conf-path=/usr/local/nginx/nginx.conf \
+    --pid-path=/usr/local/nginx/nginx.pid \
+    --with-http_ssl_module \
+    --with-pcre=../pcre-8.34 \
+    --with-zlib=../zlib-1.2.8 \
+```
+###源码安装PHP
+```
+在php源码包目录下：
+./configure \
+    --prefix=/usr/local/php  
+    --enable-fpm --with-mcrypt \
+    --enable-mbstring \
+    --disable-pdo \
+    --with-curl \
+    --disable-debug \
+    --disable-rpath \
+    --enable-inline-optimization 
+    --with-bz2 \
+    --with-zlib \
+    --enable-sockets \
+    --enable-sysvsem \
+    --enable-sysvshm \
+    -  -enable-pcntl \
+    --enable-mbregex \
+    --with-mhash \
+    --enable-zip \
+    --with-pcre-regex 
+    --with-gd \
+    --with-jpeg-dir\
+
+```
