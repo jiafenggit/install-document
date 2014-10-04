@@ -305,6 +305,4 @@ RewriteRule index(\d+).html index.php?id=$1
 
 
 	
-
-
 ```

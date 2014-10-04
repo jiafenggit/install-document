@@ -1,0 +1,6 @@
+1.  [linux常用命令](commonly_use_command.html)
+2. [vi和软件安装](vi_and_ soft_install.html)
+3. [服务和进程管理](service_and_process_manage.html)
+4. [网络配置和文件服务器](network_conf_file_service  .html)
+5. [用户和用户组管理](user_and_ user_group .html)
+6. [centos 5.5 apache配置](centos_5_ apchece_conf.html)
