@@ -112,6 +112,14 @@ intl扩展：http://pecl.php.net/get/intl-3.0.0.tgz
 
 openssl下载地址：http://www.openssl.org/source/openssl-1.0.1i.tar.gz
 
+apcu下载地址：http://pecl.php.net/get/apcu-4.0.6.tgz
+
+memcached下载地址：http://memcached.org/files/memcached-1.4.20.tar.gz
+
+memcache php扩展下载地址：http://pecl.php.net/get/memcache-2.2.7.tgz
+
+redis php扩展下载地址：http://pecl.php.net/get/redis-2.2.5.tgz
+
 </pre>
 
 ###解压包命令: tar -zxvf 包名
