@@ -61,6 +61,12 @@ libXpm-devel   \
 libXext-devel \
 libevent \
 autoconf \
+openssl \
+openssl-devel \
+bzip2-devel \
+libcurl-devel \
+libicu-devel \
+bison ncurses* \
 
 </pre>
 ###安装依赖包
@@ -123,7 +129,7 @@ openssl下载地址：http://www.openssl.org/source/openssl-1.0.1i.tar.gz
  make install
  
 进入libmcrypt目录下的 libltdl目录
-  ./configure --enable-ltdl-install --enable-shared
+  ./configure --enable-ltdl-install
  make
  make install
 
@@ -210,6 +216,8 @@ cd cd httpd-2.4.10
 --with-apr-util=/usr/local/apr-util/ \
 --with-included-apr \
 --with-pcre=/usr/local/pcre \
+make 
+make install
 
 
 
@@ -252,6 +260,8 @@ apache参数解释
 测试apache是否安装成功
 /usr/local/apache2/bin/apachectl start
 
+/sbin/iptables -I INPUT -p tcp --dport 80 -j ACCEPT 
+启动80端口
 不可访问设置设置selinux
 vi /etc/sysconfig/selinux
 设置
@@ -260,31 +270,185 @@ sexlinux=disabled
 安装网络查看工具
 yum install net-tool
 
+
+在httpd.conf里
+查找“AddType text/html”，
+然后在这行代码后面，加上一行即可：
 添加解析类型:Addtype application/x-httpd-php .php .phtml .phps 
+
+
 设置开机启动
 echo "/usr/local/apache2/bin/apachectl start" >> /etc/rc.d/rc.local
 
-
+</pre>
+<pre>
 安装mysql
 
+groupadd mysql
+useradd mysql -g mysql -M -s /sbin/nologin
 
+增加一个名为 mysql的用户。
+-g：指定新用户所属的用户组(group)
+-M：不建立根目录
+-s：定义其使用的shell，/sbin/nologin代表用户不能登录系统。
+
+安装mysql
+cmake ./ \
+-DCMAKE_INSTALL_PREFIX=/usr/local/mysql \
+-DMYSQL_DATADIR=/usr/local/mysql/data  \
+-DSYSCONFDIR=/etc \
+-DWITH_MYISAM_STORAGE_ENGINE=1 \
+-DWITH_INNOBASE_STORAGE_ENGINE=1 \
+-DWITH_MEMORY_STORAGE_ENGINE=1 \
+-DWITH_READLINE=1 \
+-DMYSQL_UNIX_ADDR=/tmp/ysql.sock \
+-DMYSQL_TCP_PORT=3306  \
+-DENABLED_LOCAL_INFILE=1 \
+-DWITH_PARTITION_STORAGE_ENGINE=1  \
+-DEXTRA_CHARSETS=all  \
+-DDEFAULT_CHARSET=utf8 \
+-DDEFAULT_COLLATION=utf8_general_ci \
+make
+make install
+
+cd /usr/local/mysql
+chown -R mysql:mysql ./
+
+scripts/mysql_install_db \
+--basedir=/usr/local/mysql \
+--datadir=/usr/local/mysql/data \
+--user=mysql \
+
+chown -R root:mysql .     (将权限设置给root用户，并设置给mysql组， 取消其他用户的读写执行权限，仅留给mysql "rx"读执行权限，其他用户无任何权限)
+chown -R mysql:mysql ./data    (数据库存放目录设置成mysql用户mysql组)
+ chmod -R ug+rwx  .     (赋予读写执行权限，其他用户权限一律删除仅给mysql用户权限)
+
+下面的命令是将mysql的配置文件拷贝到/etc
+# cp support-files/my-default.cnf  /etc/my.cnf
+
+修改my.cnf配置
+   # vi /etc/my.cnf
+    
+#[mysqld] 下面添加：
+ user=mysql
+    datadir=/data/mysql
+ default-storage-engine=MyISAM
+启动mysql
+# bin/mysqld_safe --user=mysql &        或者直接进入bin文件夹下面
+# cd bin
+#./mysqld                              \ 这里说明，mysqld_safe或者mysqld都可以启动的
+
+
+将mysql的启动服务添加到系统服务中 
+# cp support-files/mysql.server  /etc/init.d/mysql 
+现在可以使用下面的命令启动mysql 
+# service mysql start 
+停止mysql服务 
+# service mysql stop 
+重启mysql服务 
+# service mysql restart 
+
+chkconfig --add mysql
+修改默认root账户密码，默认密码为空
+修改密码 cd 切换到mysql所在目录
+# cd /usr/local/mysql
+# ./bin/mysqladmin -u root password
+
+/etc/init.d/mysql start 或者 service mysql start
+
+参考安装方法：http://blog.csdn.net/hunter_wyg/article/details/7892445
+
+选项解释
+# -DCMAKE_INSTALL_PREFIX=/usr/local/mysql          \    #安装路径
+# -DMYSQL_DATADIR=/usr/local/mysql/data            \    #数据文件存放位置
+# -DSYSCONFDIR=/etc                                \    #my.cnf路径
+# -DWITH_MYISAM_STORAGE_ENGINE=1                   \    #支持MyIASM引擎
+# -DWITH_INNOBASE_STORAGE_ENGINE=1                 \    #支持InnoDB引擎
+# -DWITH_MEMORY_STORAGE_ENGINE=1                   \    #支持Memory引擎
+# -DWITH_READLINE=1                                \    #快捷键功能(我没用过)
+# -DMYSQL_UNIX_ADDR=/tmp/mysqld.sock               \    #连接数据库socket路径
+# -DMYSQL_TCP_PORT=3306                            \    #端口
+# -DENABLED_LOCAL_INFILE=1                         \    #允许从本地导入数据
+# -DWITH_PARTITION_STORAGE_ENGINE=1                \    #安装支持数据库分区
+# -DEXTRA_CHARSETS=all                             \    #安装所有的字符集
+# -DDEFAULT_CHARSET=utf8                           \    #默认字符
+# -DDEFAULT_COLLATION=utf8_general_ci
+
+
+</pre>
+<pre>
+安装PHP
 php 
 ./configure \
  --prefix=/usr/local/php/ \
  --with-config-file-path=/usr/local/php/etc/ \
  --with-apxs2=/usr/local/apache2/bin/apxs \
- --with-libxml-dir=/usr/local/libxml2/\
- --with-jpeg-dir=/usr/local/jpeg9/\
- --with-png-dir=/usr/local/libpng/\
-  --with-pcre-dir=/usr/local/pcre/\
- --with-freetype-dir=/usr/local/freetype/\
- --with-gd=/usr/local/gd2/ \
- --with-mcrypt=/usr/local/libmcrypt/\
- --with-xpm-dir=/usr/lib/\
- --enable-soap \
- --enable-mbstring=all \
- --enable-sockets
+ --with-libxml-dir=/usr/local/libxml2/ \
+ --with-jpeg-dir=/usr/local/jpeg9/ \
+ --with-png-dir=/usr/local/libpng/ \
+ --with-pcre-dir=/usr/local/pcre/ \
+ --with-freetype-dir=/usr/local/freetype/ \
+--with-mcrypt=/usr/local/libmcrypt/ \
+--with-xpm-dir=/usr/lib/ \
+--with-mysql=/usr/local/mysql/ \
+--with-zlib-dir=/usr/local/zlib/ \
+--with-zlib \
+--with-bz2 \
+--with-openssl \
+--with-pdo-mysql  \
+--with-curl \
+--with-mcrypt \
+--enable-sockets \
+--enable-soap \
+--enable-mbstring \
+--enable-bcmath \
+--enable-intl \
+--enable-ftp \
+--enable-zip \
+--enable-soap \
+--enable-calendar \
+--enable-sysvshm \
+--enable-sysvsem  \
+--enable-sysvmsg  \
+--enable-shmop \
+--enable-mysqlnd \
 
+cp php.ini-production /usr/local/php/etc/php.ini
+
+
+vi /usrl/local/php/etc/php.ini 
+timezone=PRC
+
+
+ln -s /usr/local/php/bin/php /usr/bin/php
+
+安装git
+yum install git
+
+安装composer
+
+php -r "readfile('https://getcomposer.org/installer');" | php
+
+设置composer
+ln -s /usr/bin/composer.phar /usr/bin/composer
+
+
+安装扩展php
+memcache
+/usr/local/php/bin/phpize
+./comfigure --with-php-config=/usr/local/php/bin/php-config
+make
+make install
+
+php.ini添加
+memcache.so
+
+
+重启apache
+/usr/local/apache2/bin/apachectl restart
+
+启动mysql 
+/etc/init.d/mysql
 
 
 NGINX 
