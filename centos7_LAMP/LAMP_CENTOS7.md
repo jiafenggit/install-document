@@ -75,6 +75,7 @@ bison ncurses* \
 
 libxml2下载地址：ftp://xmlsoft.org/libxml2/libxml2-2.9.1.tar.gz
 
+尽量使用2.5.7版本，高版本可能出现问题
 libmcrypt下载地址：http://jaist.dl.sourceforge.net/project/mcrypt/Libmcrypt/2.5.8/libmcrypt-2.5.8.tar.gz
 
 zlib下载地址：http://zlib.net/zlib-1.2.8.tar.gz
@@ -269,7 +270,9 @@ apache参数解释
 /usr/local/apache2/bin/apachectl start
 
 /sbin/iptables -I INPUT -p tcp --dport 80 -j ACCEPT 
-启动80端口
+启用80端口
+
+
 不可访问设置设置selinux
 vi /etc/sysconfig/selinux
 设置
@@ -288,6 +291,10 @@ yum install net-tool
 设置开机启动
 echo "/usr/local/apache2/bin/apachectl start" >> /etc/rc.d/rc.local
 
+
+
+按天生成日志的方法：
+http://blog.163.com/sujoe_2006/blog/static/3353151201121285820104/
 </pre>
 <pre>
 安装mysql
@@ -308,46 +315,48 @@ cmake ./ \
 -DWITH_MYISAM_STORAGE_ENGINE=1 \
 -DWITH_INNOBASE_STORAGE_ENGINE=1 \
 -DWITH_MEMORY_STORAGE_ENGINE=1 \
+-DWITH_FEDERATED_STORAGE_ENGINE=1 \
+-DWITH_PARTITION_STORAGE_ENGINE=1  \
 -DWITH_READLINE=1 \
--DMYSQL_UNIX_ADDR=/tmp/ysql.sock \
+-DMYSQL_UNIX_ADDR=/tmp/mysqld.sock \
 -DMYSQL_TCP_PORT=3306  \
 -DENABLED_LOCAL_INFILE=1 \
--DWITH_PARTITION_STORAGE_ENGINE=1  \
 -DEXTRA_CHARSETS=all  \
 -DDEFAULT_CHARSET=utf8 \
 -DDEFAULT_COLLATION=utf8_general_ci \
 make
 make install
 
-cd /usr/local/mysql
-chown -R mysql:mysql ./
+# cd /usr/local/mysql 
+# chown -R mysql:mysql .    (#这里最后是有个.的大家要注意# 为了安全安装完成后请修改权限给root用户)
+# scripts/mysql_install_db --user=mysql    (先进行这一步再做如下权限的修改)
+# chown -R root:mysql .     (将权限设置给root用户，并设置给mysql组， 取消其他用户的读写执行权限，仅留给mysql "rx"读执行权限，其他用户无任何权限)
+# chown -R mysql:mysql ./data    (数据库存放目录设置成mysql用户mysql组)
+# chmod -R ug+rwx  .     (赋予读写执行权限，其他用户权限一律删除仅给mysql用户权限)
+ 
 
-scripts/mysql_install_db \
---basedir=/usr/local/mysql \
---datadir=/usr/local/mysql/data \
---user=mysql \
+参考设置网址：http://blog.sina.com.cn/s/blog_6d39ac7e0101cq48.html
 
-chown -R root:mysql .     (将权限设置给root用户，并设置给mysql组， 取消其他用户的读写执行权限，仅留给mysql "rx"读执行权限，其他用户无任何权限)
-chown -R mysql:mysql ./data    (数据库存放目录设置成mysql用户mysql组)
- chmod -R ug+rwx  .     (赋予读写执行权限，其他用户权限一律删除仅给mysql用户权限)
-
-下面的命令是将mysql的配置文件拷贝到/etc
+复制配置文件：mysql的配置文件拷贝到/etc
 # cp support-files/my-default.cnf  /etc/my.cnf
+
 
 修改my.cnf配置
    # vi /etc/my.cnf
     
 #[mysqld] 下面添加：
  user=mysql
-    datadir=/data/mysql
- default-storage-engine=MyISAM
-启动mysql
+   datadir=/usr/local/mysql/data/
+   default-storage-engine=MyISAM
+   explicit_defaults_for_timestamp=true
+
 # bin/mysqld_safe --user=mysql &        或者直接进入bin文件夹下面
 # cd bin
 #./mysqld                              \ 这里说明，mysqld_safe或者mysqld都可以启动的
 
 
 将mysql的启动服务添加到系统服务中 
+
 # cp support-files/mysql.server  /etc/init.d/mysql 
 现在可以使用下面的命令启动mysql 
 # service mysql start 
@@ -364,7 +373,7 @@ chkconfig --add mysql
 
 /etc/init.d/mysql start 或者 service mysql start
 
-参考安装方法：http://blog.csdn.net/hunter_wyg/article/details/7892445
+参考安装方法：
 
 选项解释
 # -DCMAKE_INSTALL_PREFIX=/usr/local/mysql          \    #安装路径
@@ -396,7 +405,8 @@ php
  --with-png-dir=/usr/local/libpng/ \
  --with-pcre-dir=/usr/local/pcre/ \
  --with-freetype-dir=/usr/local/freetype/ \
---with-mcrypt=/usr/local/libmcrypt/ \
+--with-mcrypt \
+--with-mcrypt-dir=/usr/local/libmcrypt/ \
 --with-xpm-dir=/usr/lib/ \
 --with-mysql=/usr/local/mysql/ \
 --with-zlib-dir=/usr/local/zlib/ \
@@ -430,6 +440,21 @@ timezone=PRC
 
 ln -s /usr/local/php/bin/php /usr/bin/php
 
+遇到问题：yum  install  libmcrypt  libmcrypt-devel
+wget http://elders.princeton.edu/data/puias/unsupported/6/x86_64/libmcrypt-2.5.8-9.puias6.x86_64.rpm
+wget http://elders.princeton.edu/data/puias/unsupported/6/x86_64/libmcrypt-devel-2.5.8-9.puias6.x86_64.rpm
+rpm -ivh libmcrypt-2.5.8-9.puias6.x86_64.rpm
+rpm -ivh libmcrypt-devel-2.5.8-9.puias6.x86_64.rpm
+
+
+
+libmemcached
+https://launchpadlibrarian.net/165454254/libmemcached-1.0.18.tar.gz
+./configure --prefix=/usr/local/libmemcached
+make
+make install
+
+
 安装git
 yum install git
 
@@ -457,6 +482,160 @@ memcache.so
 
 启动mysql 
 /etc/init.d/mysql
+
+查看开放的端口
+netstat -tln
+
+同步服务器时间
+ntpdate -u 210.72.145.44 
+
+
+tomcat官方安装文档
+http://tomcat.apache.org/tomcat-8.0-doc/building.html#Download_a_Java_Development_Kit_(JDK)_version_7
+
+
+
+安装jdk
+yum  -y list java*
+yum -y install  java-1.6.0-openjdk*
+查看版本： java -version
+有值说明安装成功
+安装tomcat
+
+复制 cp -R  apache-tomcat-8.0.14-src /usr/local/tomcat
+
+cd /usr/local/tomcat
+启动Tomcat
+
+/usr/local/tomcat/bin/startup.sh   //启动tomcat
+参考配置：http://blog.sina.com.cn/s/blog_6a7cdcd40101b1km.html
+
+创建日志文件目录和文件
+mkdir /usr/local/tomcat/logs/
+touch /usr/local/tomcat/logs/catalina.out
+
+加入开机启动 
+在/etc/rc.d/rc.local中添加
+/usr/local/tomcat/bin/startup.sh
+
+防火墙开放8080端口
+/sbin/iptables -I INPUT -p tcp --dport 8080 -j ACCEPT #开启8080端口 
+/etc/rc.d/init.d/iptables save #保存配置  
+或者service iptables save
+/etc/rc.d/init.d/iptables restart #重启防火墙 
+
+查看防火墙规则
+ service iptables status
+
+
+
+tomcat安全设置 参考 
+http://blog.c1gstudio.com/archives/865
+
+1.关闭服务器端口：
+server.xml默认有下面一行：
+
+<Server port="8005" shutdown="SHUTDOWN">
+这样允许任何人只要telnet到服务器的8005端口，输入”SHUTDOWN”，然后回车，服务器立即就被关掉了。
+从安全的角度上考虑，我们需要把这个shutdown指令改成一个别人不容易猜测的字符串，可以同时把端口也改了。
+例如修改如下：
+
+<Server port="8005" shutdown="c1gstudio">
+这样就只有在telnet到8005，并且输入”c1gstudio”才能够关闭Tomcat.
+注意：这个修改不影响shutdown.bat的执行。运行shutdown.bat一样可以关闭服务器。
+
+2.增加防火墙
+更安全的方式是同时增加防火墙，来限制访问Tomcat的控制与连接器端口
+你可以通过运行netstat -a来查看网络服务器socket及其他现有连接的清单
+插入规则
+iptables -A INPUT -p tcp -m tcp --dport 8005 -j DROP
+保存规则
+service iptables save
+重载规则
+service iptables restart
+
+3.处理好Tomcat管理台的安全
+Tomcat管理台的应用文件，默认在{Tomcat安装目录}\server\webapps下，有admin和manager两个应用。
+其用户密码，在{Tomcat安装目录}\conf/tomcat-users.xml中定义。在{Tomcat安装目录}\webapps下
+admin.xml和manager.xml文件定义了可以通过访问/admin和/manager进入。
+默认情况下，完全可以登录tomcat管理台，造成严重安全问题
+检测办法：用IE打开链接http://[IP]:[Port]/admin，以用户名admin，密码为空登录，如果成功，
+说明存在问题。
+解决办法：可以删除{Tomcat安装目录}\webapps下admin.xml和manager.xml文件，或者去掉用户密
+码，也可以删除应用文件。
+
+4.运行错误网页
+
+如果找不到网页即出现404错误，会显示服务器版本号，服务器配置也一目了然，
+为了避免这种情况，希望自定义设置错误页面。
+设置如下：
+用记事本打开\conf\web.xml文件，在文件的倒数第二行（一行之前）加入以下内容：
+
+<error-page>
+    <error-code>404</error-code>
+    <location>/404.jsp</location>
+  </error-page>
+  <error-page>
+    <error-code>500</error-code>
+    <location>/500.jsp</location>
+  </error-page>
+在根目录下创建404.jsp和500.jsp文件
+
+5.多重服务器的安全防护模式
+当在同一台主机（或同一网络文件系统）上的 Apache httpd Web 服务器与 Tomcat 之间共享网页的实际目录时，
+请留意其个别安全防护模式间的相互作用。当你有“受保护的目录”时，这会特别重要。
+服务器将具有能读取彼此文件的权限。
+在这些状况下，请注意 Tomcat 并不会保护如 .htaccess 的文件，而Apache也不会保护Web应用程序的 WEB-INF 或 META-INF 目录。
+这些情形都有可能导致重大的安全漏洞，所以，我们建议你在使用这些特别的目录时，要格外小心。
+
+若要让 Apache httpd 保护 WEB-INF 及 META-INF 目录，请在 httpd.conf 中加入下列内容
+
+<LocationMatch "/WEB-INF/">
+AllowOverride None
+deny from all
+</LocationMatch>
+<LocationMatch "/META-INF/">
+AllowOverride None
+deny from all
+</LocationMatch>
+6.屏蔽目录文件自动列出的方法
+conf/web.xml文件
+
+<servlet>
+        <servlet-name>default</servlet-name>
+        <servlet-class>org.apache.catalina.servlets.DefaultServlet</servlet-class>
+        <init-param>
+            <param-name>debug</param-name>
+            <param-value>0</param-value>
+        </init-param>
+        <init-param>
+            <param-name>listings</param-name>
+            <param-value>false</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+ 
+<param-value>false</param-value>
+这里false为不列出，true为充许列出
+
+7.以非root用户运行
+
+8.关闭8009端口
+8009/tcp open ajp13
+
+8009端口是tomcat和apache的mod_proxy_ajp,mod_jk沟通的端口，没有用到就关了。
+
+tomcatpath/conf/server.xml 中的这段注释掉
+
+<!--
+    <Connector port="8009" protocol="AJP/1.3" redirectPort="8443" />
+    -->
+Related Posts
+
+8005      远程停服务端口
+8080      为HTTP端口，
+8443      为HTTPS端口
+8009     为AJP端口  APACHE能过AJP协议访问TOMCAT的8009端口。
 
 
 NGINX 
@@ -513,9 +692,10 @@ kill -TERM 主进程号
 强制停止Nginx：
 pkill -9 nginx
 
-
-
-
+</pre>
+##rpm的安装
+rpm -ivh linuxqq-v1.0.2-beta1.i386.rpm
+<pre>
 nginx  nginx.conf  修改  
  location ~ \.php$ {
             root           html;
