@@ -174,3 +174,28 @@ php composer.phar
 ####配置加速器
 apc
  --with-php-config=/usr/local/php/bin/php-config --enable-apcu
+ 
+ 
+##设置nginx pathinfo模式
+<pre>
+ 打开Nginx的配置文件nginx.conf
+在server中加入一下配置：
+
+location ~ .php {  //去除#
+root d:/ThinkPHP/;
+fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+fastcgi_pass 127.0.0.1:9000;
+fastcgi_index index.php;
+include fastcgi_params; 
+#pathinfo support 
+set $real_script_name $fastcgi_script_name;
+set $path_info ””;
+if ( $fastcgi_script_name ~ “^(.+?.php)(/.+)$”){
+set $real_script_name $1;
+set $path_info $2;
+} fastcgi_param SCRIPT_NAME $real_script_name;
+fastcgi_param PATH_INFO $path_info; 
+}
+
+需要注意的是那个if判断语句，在(的前后都必须有空格，否则Nginx会报配置语法错误。
+</pre>
