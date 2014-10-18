@@ -1,0 +1,1 @@
+http://219.142.106.136/vcc/fee.php?pid=10001&timeStamp=20140918160039&svcid=10001&callbackData=QAZWSXEDC&imsi=460030912121001&imei=860275020104961&sign=ac6f2a8cb8f97af0d78264e0b8ce14c8

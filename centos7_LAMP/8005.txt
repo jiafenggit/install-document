@@ -1,0 +1,1 @@
+/sbin/iptables -A INPUT -p tcp -m tcp –dport 8005 -j DROP

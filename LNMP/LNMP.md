@@ -1,10 +1,9 @@
 #<center>LNMP</center>
 ##ubuntu 软件源apt-get安装LNMP
-```
+<Pre>
 sudo apt-get install nginx 
 sudo apt-get install php5 php5-cli php5-fpm php5-gd  php5-imagick php5-imap php5-json php5-mcrypt php5-memcache php5-mhash php5-ming php5-mysql php5-ps php5-pspell php5-recode php5-snmp php5-sqlite  php5-tidy php5-xcache php5-xmlrpc php5-xsl php-pear php-soap
-
-```
+</Pre>
 
 ##源码包安装LNMP
 ###NGINX 源码安装(测试环境ubuntu，需要root(sudo 命令)的权限执行一下代码 )
@@ -26,14 +25,14 @@ sudo apt-get install php5 php5-cli php5-fpm php5-gd  php5-imagick php5-imap php5
 ###编译php所需(安装目录都是在当前软件包目录下)
 apt-get install autoconf limXpm-dev
 ####libxml2
-```
-./configure --prefix=/usr/local/libxmll2/
+<pre>
+./configure --prefix=/usr/local/libxml2/
 make
 make install
-```
+</pre>
 
 ####libmcrypt
-```
+<pre>
 ./configure --prefix=/usr/local/libmcrypt/
 make
 make install
@@ -43,7 +42,7 @@ cd libltdl
 ./configure --enable-ltdl-install
 make
 make install
-```
+</pre>
 ```
 ####libpng
 
@@ -161,7 +160,16 @@ php源码包中复制php.ini-development或者 php.ini-production  到 /php/etc/
 
 php安装目录下复制 cp php-fpm.conf.default  php-fpm.conf
 vi php-fpm.conf
+
+
 设置用户
+groupadd mysql
+useradd mysql -g mysql -M -s /sbin/nologin
+
+增加一个名为 mysql的用户。
+-g：指定新用户所属的用户组(group)
+-M：不建立根目录
+-s：定义其使用的shell，/sbin/nologin代表用户不能登录系统。
 sudo useradd nginx
 user = nginx
 group = nginx

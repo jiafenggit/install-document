@@ -1,5 +1,5 @@
 ##php配置选项
-```
+<pre>
 /configure --prefix=/usr/local/php 
 --with-config-file-path=/usr/local/php/etc 
 --with-mysql=/usr/local/mysql
@@ -41,4 +41,4 @@
 #mysqli扩展技术不仅可以调用MySQL的存储过程、处理MySQL事务，而且还可以使访问数据库工作变得更加稳定。 
 make ZEND_EXTRA_LIBS='-liconv' 
 make install  
-```
+</pre>
