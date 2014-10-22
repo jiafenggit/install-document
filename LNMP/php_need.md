@@ -42,3 +42,7 @@
 make ZEND_EXTRA_LIBS='-liconv' 
 make install  
 </pre>
+
+
+
+php.ini 设置expose =off可以隐藏php版本号

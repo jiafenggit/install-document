@@ -40,3 +40,10 @@
 
 ###配置apache manifest
 AddType text/cache-manifest manifest
+
+
+
+阿里云 日志设置
+CustomLog "|/usr/local/work/apache/bin/rotatelogs /www/logs/%Y%m%d_access.log 86400 480" common
+
+ErrorLog  "|/usr/local/work/apache/bin/rotatelogs /www/logs/%Y%m%d_error.log 86400 480"
