@@ -65,6 +65,8 @@ apache
 
 
 maridb
+参考：http://blog.linuxeye.com/352.html
+
 cmake ./ \
 -DCMAKE_INSTALL_PREFIX=/usr/local/lamp/maridb \
 -DMYSQL_DATADIR=/www/maridb \
@@ -77,7 +79,7 @@ cmake ./ \
 -DWITH_PARTITION_STORAGE_ENGINE=1  \
 -DWITH_BLACKHOLE_STORAGE_ENGINE=1 \
 -DWITH_READLINE=1 \
--DMYSQL_UNIX_ADDR=/tmp/mysqld.sock \
+-DMYSQL_UNIX_ADDR=/tmp/mysqld_2.sock \
 -DMYSQL_TCP_PORT=3307  \
 -DENABLED_LOCAL_INFILE=1 \
 -DEXTRA_CHARSETS=all  \
@@ -85,6 +87,21 @@ cmake ./ \
 -DDEFAULT_COLLATION=utf8_general_ci \
 -DWITH_BIG_TABLES=1 \
 -DWITH_DEBUG=0 \
+
+mkdir ./etc
+cp ./support-files/my-small.cnf ./etc/my.cnf
+
+
+groupadd maridb
+useradd maridb -g maridb -M -s /sbin/nologin 
+chown -R maridb:maridb . 
+
+./scripts/mysql_install_db --basedir=/usr/local/lamp/maridb/  --datadir=/www/maridb --defaults-file=/usr/local/lamp/maridb/etc/my.cnf --user=maridb
+
+chown -R root:maridb .
+chown -R root:maridb /www/maridb/
+
+./mysqld_safe  --defaults-file=/usr/local/lamp/maridb/etc/my.cnf
 
 php
 ./configure \
