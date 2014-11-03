@@ -46,7 +46,7 @@ hwclock
 第5列标识号星期0～6（0表示星期天）
 第6列要运行的命令   
 
-crontab -uroot -e
+crontab -uroot -e st
     
     
 
