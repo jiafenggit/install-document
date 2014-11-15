@@ -1,0 +1,67 @@
+php 3des 加密  与java里面的加密，php需要按块填充，java才能解密否则报错
+
+
+php  时间戳是10位的， java获取的时间戳需要去掉后面三围
+java 时间戳是13位的   使用的时候php需要在后面补上3个零
+
+md5  加密的处理的不一样
+
+function convertMD5($md5)
+{
+    $bytearr = str_split($md5, 2);
+    $ret = '';
+
+    foreach ($bytearr as $byte)
+        $ret .= ($byte[0] == '0') ? str_replace('0', '', $byte) : $byte;
+
+    return $ret;
+}
+
+方式二
+function convertMD5($md5)
+{
+    $bytearr = str_split($md5, 2);
+    $ret = '';
+
+    foreach ($bytearr as $byte)
+        $ret .= ($byte[0] == '0') ? $byte[1] : $byte;
+
+    return $ret;
+}
+
+
+$md5 = md5('catch12');
+$new_md5 = '';
+for ($i = 0; $i < 32; $i += 2)
+{
+  if ($md5[$i] != '0') $new_md5 .= $md5[$i];
+  $new_md5 .= $md5[$i+1];
+}
+
+echo $new_md5;
+
+
+
+php 比较异同
+
+function getCharacterOffsetOfDifference($str1, $str2, $encoding = 'UTF-8') {
+    return mb_strlen($str1, $encoding)
+           - mb_strlen(
+                 mb_strcut(
+                     $str1,
+                     strspn($str1 ^ $str2, "\0"),
+                     mb_strlen($str1, '8bit'),
+                     $encoding
+                 ),
+                 $encoding
+             );
+}
+
+
+for ($offset = 0,$len=strlen(urlencode($str2)); $offset < $len; ++$offset) {
+    if ($str[$offset] !== $str2[$offset]) {
+	   
+		
+        echo  $offset;die;
+    }
+}

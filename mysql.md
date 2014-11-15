@@ -26,3 +26,14 @@ source C:\Users\mm\Downloads\yueloo.sql;
 
 ##mysql 导出数据不包含表结构
 mysqldump -uroot -p -B DBNAME --table table_name > table_name.sql
+
+
+mysql 时间输出
+
+  比如
+  select articleid,articlename,from_unixtime(postdate,'%Y-%m-%d'),from_unixtime(lastupdate,'%Y-%m-%d') from jieqi_article_article where articleid in(62393,62406,62390,62376,62391);
+  
+  from_unixtime() 时间戳输出格式为年月日
+  
+  UNIX_TIMESTAMP() 你那月是转化为时间戳
+  date_formate(now(),'%Y-%m-%d');
