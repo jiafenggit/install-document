@@ -37,3 +37,7 @@ mysql 时间输出
   
   UNIX_TIMESTAMP() 你那月是转化为时间戳
   date_formate(now(),'%Y-%m-%d');
+  
+  
+  按条件到处数据
+  mysqldump -uroot -p sq_yueloo jieqi_pooling_article  --where=' articleid in (40042,62323,62322)' > /www/test.yueloo.com/test.sql

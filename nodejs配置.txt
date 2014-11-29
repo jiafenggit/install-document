@@ -1,0 +1,5 @@
+安装nodejs
+cd node
+./configure
+make
+sudo make install
