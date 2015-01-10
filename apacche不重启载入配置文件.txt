@@ -1,0 +1,74 @@
+apache 检查语法
+
+httpd -t
+
+
+service httpd reload
+
+
+apachectl graceful
+
+ps aux ｜　grep httpd
+
+kill -HUP 进程号
+
+
+kill [ -s signal | -p ] [ -a ] pid ...   
+ 
+kill -l [ signal ]  
+-s (signal) : 其中可用的讯号有 HUP (1), KILL (9), TERM (15), 分别代表著重跑, 砍掉, 结束; 详细的信号可以用 kill -l
+-p : 印出 pid , 并不送出信号
+-l (signal) : 列出所有可用的信号名称
+
+【示例】
+
+将 pid 为 323 的行程砍掉 (kill) :
+
+
+kill -9 323
+将 pid 为 456 的行程重跑 (restart) :
+
+
+kill -HUP 456
+
+
+
+./apachectl configtest
+
+
+添加新模块
+
+/usr/local/apache/bin/apxs -c -i -a mod_proxy.c proxy_util.c mod_proxy_http.c
+
+-c表示进行编译，-i表示将生成的模块安装到apache的modules目录下，-a选项在httpd.conf中增加一条LoadModule指令以载入刚安装的模块，或者如果此指令已存在，则启用之。
+
+
+http.conf 添加
+LoadModule proxy_module modules/mod_proxy.so
+
+
+
+apache压缩资源配置
+
+启用
+LoadModule deflate_module modules/mod_deflate.so
+LoadModule headers_module modules/mod_headers.so
+
+
+<ifmodule deflate_module>
+    DeflateCompressionLevel 5
+    DeflateBufferSize 8096
+    DeflateMemLevel 8
+    DeflateWindowSize 8
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE text/html
+    AddOutputFilterByType DEFLATE text/plain
+    AddOutputFilterByType DEFLATE text/xml	
+	AddOutputFilterByType DEFLATE application/xhtml+xml
+	AddOutputFilterByType DEFLATE application/xml
+	AddOutputFilterByType DEFLATE application/x-javascript
+	AddOutputFilterByType DEFLATE text/javascript
+	SetEnvIfNoCase Request_URI .(?:gif|jpe?g|png)$ no-gzip dont-vary 
+	SetEnvIfNoCase Request_URI .(?:exe|t?gz|zip|bz2|sit|rar)$ no-gzip dont-vary 
+	SetEnvIfNoCase Request_URI .(?:pdf|doc)$ no-gzip dont-vary 
+</ifmodule>

@@ -71,6 +71,6 @@ server {
 }
     
     
-
-
+asset资源
+php app/console assetic:dump --env=prod --no-debug
 
