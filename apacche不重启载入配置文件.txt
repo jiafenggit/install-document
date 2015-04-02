@@ -72,3 +72,8 @@ LoadModule headers_module modules/mod_headers.so
 	SetEnvIfNoCase Request_URI .(?:exe|t?gz|zip|bz2|sit|rar)$ no-gzip dont-vary 
 	SetEnvIfNoCase Request_URI .(?:pdf|doc)$ no-gzip dont-vary 
 </ifmodule>
+
+
+apache 隐藏版本号：
+ServerTokens ProductOnly
+ServerSignature Off
