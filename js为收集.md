@@ -68,30 +68,39 @@
 *  Material Design     --谷歌现代化的响应式前端框架
 *  Metro JS            -- metro界面
 *  template-native.js  --前端模板引擎
+*  Echo.js 一个简单的JavaScript图片与加载插件
+*  Dojo Toolkit 1.10   --IBM VMWARE CISCO  js工具集
+*  Semantic  --侧边栏  --http://design.1sters.com/
+*  Lightbox   -- 弹出式盒子 显示图片等等
+*  CryptoJS v3.0.2  code.google.com/p/crypto-js
+*  ImageLazyLoad  图片延迟加载
+
+###data 协议
+
+* data:font/opentype;base64,
+* data:image/svg+xml;base64,
+* data:image/svg+xml,%3Csvg%20xmlns%3D%22htt
+* data:image/png;base64,
+
+* about 协议
+* about:blank
+
+###webm 谷歌开源视频格式
+* webp 谷歌开源高压缩图片 可比JPG减小40%的体积，转换工具 
+* webpconv
+
+###HTML
+* pajx
+* websocket
+* ajax传输二进制数据 
+* 拖拽 
+* 服务器推技术
+* 时间
+* webrtc
+* Worker 工作机制
+* 圣杯盒子
 
 
-
-
-data 协议
-
-data:font/opentype;base64,
-data:image/svg+xml;base64,
-data:image/svg+xml,%3Csvg%20xmlns%3D%22htt
-data:image/png;base64,
-
-about 协议
-about:blank
-
-webm 谷歌开源视频格式
-webp 谷歌开源高压缩图片 可比JPG减小40%的体积，转换工具 webpconv
-
-
-pajx
-websocket
-ajax传输二进制数据 
-拖拽 
-服务器推技术
-时间
-webrtc
-Worker 工作机制
-
+php 解决跨域申明头
+header("Access-Control-Allow-Origin:*");
+header("content-type:text/html;charset='utf-8'");
