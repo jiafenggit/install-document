@@ -1,61 +1,70 @@
 <?php
-		var_dump(get_called_class()); //静态方法调用的类名
-		echo get_parent_class($this); //获得对象的父类名称
-		var_dump(get_defined_constants()); //获得所有已经定义的常量
-		var_dump(get_defined_vars());  //获得一定义的全局变量
-		$result = get_defined_functions();//获得已定义的函数
-		var_dump($result['user']);
-		$reffunc = new ReflectionFunction('gb2utf8xhsafestr');
-		echo $reffunc->getParameters();
-		echo PHP_EOL;
-		echo $reffunc->getDocComment();
-		echo PHP_EOL;
-		echo $reffunc->getStartLine();
-		echo PHP_EOL;
-		echo $reffunc->getFileName();
-		echo PHP_EOL;
-		echo $reffunc->getStaticVariables();
-		echo PHP_EOL;
-		echo $reffunc->__toString ();			
-		var_dump($data);die;
 
-		//var_dump(debug_backtrace());
-		//var_dump(debug_print_backtrace());
+
+	    var_dump(get_defined_constants()); //获得所有已经定义的常量
+		var_dump(get_defined_vars());  //获得一定义的全局变量
+		var_dump(get_called_class()); //静态方法调用的类名
+		var_dump(get_declared_classes());//获得已经申明的类
+		var_dump(get_declared_interfaces());//获得已经申明的接口
+		$result = get_defined_functions();//获得已定义的函数
+		var_dump($result['user']); //打印用户自定义的行数
+		
+		
+		echo get_parent_class($this); //获得对象的父类名称
+	
+		
+		$reffunc = new ReflectionFunction('gb2utf8xhsafestr');
+		echo $reffunc->getParameters(); //获得函数需要传递的参数
+		echo PHP_EOL;
+		echo $reffunc->getDocComment(); //打印函数的注视
+		echo PHP_EOL;
+		echo $reffunc->getStartLine();//打印函数所在行
+		echo PHP_EOL;
+		echo $reffunc->getFileName();//打印函数文件名
+		echo PHP_EOL;
+		echo $reffunc->getStaticVariables();//获得静态变量
+		echo PHP_EOL;
+		echo $reffunc->__toString ();	//获得函数实现的文本
+		
+
+		//var_dump(debug_backtrace()); //追踪 当前方法执行流程
+		//var_dump(debug_print_backtrace()); // 追踪当前执行流程
 		
 	
-		//var_dump(get_class($articleLib));
+		//var_dump(get_class($articleLib)); //获得对象的类名
 		
+		
+		//反射一个类
 		$reflect = new ReflectionClass(get_class($this));
-		$res = $reflect->getProperties();
-		$res1 = $reflect->getParentClass();
+		$res = $reflect->getProperties(); //获得类属性
+		$res1 = $reflect->getParentClass(); //获得父类
+		
+		//答应出一个类的继承关系以及属性
 		$i =1;
-		//var_dump(get_declared_classes());die;
-		//var_dump(get_declared_interfaces());die;
+		
 		function getclass($class){
 			$reflect = new ReflectionClass($class);
-			$res = $reflect->getProperties();
-			$res1 = $reflect->getParentClass();
-			//get_parent_class($class);
-			var_dump(get_class_vars($class));
-			echo $res1->name;
+			$res = $reflect->getProperties();//获得的当前类的所有属性
+			$res1 = $reflect->getParentClass();//获得父类名称
+			$patentclass = get_parent_class($class);//获得父类名称
+			var_dump(get_class_vars($class));//获得类的所有属性
+			echo $res1->name;//获得类名
 			echo PHP_EOL;
 			global $i;
 			echo $i;
 			if($i>100){
 				die;
 			}
-			var_dump($res);
+			
 			if(class_exists($res1->name)){
 				$i++;
+				//递归打印这个这个类的继承关系
 				getclass($res1->name);
 			}
 			
 		}
 		getclass(get_class($this));
-		//var_dump($res);
-		var_dump($res1);die;
-		var_dump($result['user']);
-		var_dump(debug_backtrace());die;
+	
 		
 		
 //压缩
@@ -67,6 +76,7 @@ ini_set('zlib.output_compression',1);
 ini_set('zlib.output_compression_level',5);
 
 
+//获得一个函数的定义
 function getfunc($func){
 	try{		
 		$reflect = new ReflectionFunction($func);

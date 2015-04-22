@@ -74,7 +74,7 @@
 *  Lightbox   -- 弹出式盒子 显示图片等等
 *  CryptoJS v3.0.2  code.google.com/p/crypto-js
 *  ImageLazyLoad  图片延迟加载
-
+#  资源总结 ： http://segmentfault.com/a/1190000002691861
 ###data 协议
 
 * data:font/opentype;base64,
