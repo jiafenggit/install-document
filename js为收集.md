@@ -74,6 +74,9 @@
 *  Lightbox   -- 弹出式盒子 显示图片等等
 *  CryptoJS v3.0.2  code.google.com/p/crypto-js
 *  ImageLazyLoad  图片延迟加载
+*  jquery.lazyload.js  jquery预加载
+*  clippy.js       类似微软助手
+*  Sticker.js      贴纸效果
 #  资源总结 ： http://segmentfault.com/a/1190000002691861
 ###data 协议
 
@@ -101,6 +104,9 @@
 * 圣杯盒子
 
 
-php 解决跨域申明头
+php 解决跨域申明头 
+P3P
+
+CORS
 header("Access-Control-Allow-Origin:*");
 header("content-type:text/html;charset='utf-8'");
